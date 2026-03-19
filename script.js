@@ -46,12 +46,12 @@ async function saveWord() {
       throw new Error(result.message);
     }
 
-    // Give them 8 seconds to read it before clearing the screen
+    // Give them 30 seconds to read it before clearing the screen
     setTimeout(() => {
       saveBtn.innerText = "Auto-Fill & Save";
       saveBtn.disabled = false;
       statusDiv.innerHTML = "";
-    }, 8000);
+    }, 30000);
 
   } catch (error) {
     saveBtn.innerText = "Auto-Fill & Save";
