@@ -30,17 +30,28 @@ async function saveWord() {
 
     if (result.status === "success") {
       saveBtn.innerText = "✅ Saved Successfully!";
-      statusDiv.innerHTML = `<b>${word}</b> added to your sheet!`;
+      const ai = result.data; // The new data from Apps Script!
+      
+      // Build a beautiful result card to show the user
+      statusDiv.innerHTML = `
+        <div style="text-align: left; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #ddd;">
+          <h3 style="margin-top:0; color: #28a745;">${word} <span style="font-size: 14px; color: #666;">(${ai.translation})</span></h3>
+          <p><b>Meaning:</b> ${ai.meaning}</p>
+          <p><b>Synonyms:</b> ${ai.synonyms}</p>
+          <p><b>Antonyms:</b> ${ai.antonyms}</p>
+        </div>
+      `;
       document.getElementById('wordInput').value = ''; 
     } else {
       throw new Error(result.message);
     }
 
+    // Give them 8 seconds to read it before clearing the screen
     setTimeout(() => {
       saveBtn.innerText = "Auto-Fill & Save";
       saveBtn.disabled = false;
       statusDiv.innerHTML = "";
-    }, 3000);
+    }, 8000);
 
   } catch (error) {
     saveBtn.innerText = "Auto-Fill & Save";
