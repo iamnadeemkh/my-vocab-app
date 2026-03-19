@@ -90,17 +90,16 @@ function renderList() {
   const listDiv = document.getElementById('recentWords');
   listDiv.innerHTML = ""; // Clear current items
 
-  // If view is 'recent', grab only the first 5. Otherwise, grab all.
   const wordsToShow = currentView === 'recent' ? globalWords.slice(0, 5) : globalWords;
 
   wordsToShow.forEach(item => {
-    // Only show delete button if we are looking at 'all' words
+    // We now use the "delete-btn" CSS class instead of messy inline styles
     const deleteBtn = currentView === 'all' 
-      ? `<button onclick="deleteWord('${item.word}')" style="background: none; border: none; cursor: pointer; font-size: 20px;" title="Delete Word">🗑️</button>` 
+      ? `<button class="delete-btn" onclick="deleteWord('${item.word}')" title="Delete Word">🗑️</button>` 
       : ``;
 
     listDiv.innerHTML += `
-      <div class="recent-card" style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="recent-card">
         <div>
           <strong style="font-size: 16px;">${item.word}</strong> <span style="font-size: 12px; color: #888;">(${item.translation})</span>
           <div style="font-size: 13px; margin-top: 4px;">${item.meaning}</div>
@@ -114,7 +113,19 @@ function renderList() {
 // --- TAB TOGGLE FUNCTION ---
 function setView(viewType) {
   currentView = viewType;
-  renderList(); // Redraw the UI instantly without fetching from Google!
+  
+  // 1. Remove the green highlight from BOTH buttons
+  document.getElementById('tab-recent').classList.remove('active-tab');
+  document.getElementById('tab-all').classList.remove('active-tab');
+  
+  // 2. Add the green highlight ONLY to the button you just clicked
+  if (viewType === 'recent') {
+    document.getElementById('tab-recent').classList.add('active-tab');
+  } else {
+    document.getElementById('tab-all').classList.add('active-tab');
+  }
+
+  renderList(); // Redraw the UI
 }
 
 // --- DELETE FUNCTION ---

@@ -86,14 +86,75 @@ body.dark-mode #status {
 }
 
 /* --- DASHBOARD STYLES --- */
+
+
+/* --- TAB BUTTON STYLES --- */
+.tab-btn {
+  flex: 1;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid #555;
+  background: transparent;
+  color: inherit;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+/* The highlighted state for the active tab */
+.tab-btn.active-tab {
+  background-color: #28a745; /* Matches your green save button */
+  color: white;
+  border-color: #28a745;
+}
+
+/* --- DASHBOARD & CARD STYLES --- */
 .recent-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Pushes the trash can perfectly to the top right */
   background: #f8f9fa;
-  padding: 10px;
+  padding: 12px;
   border-radius: 6px;
   margin-bottom: 8px;
   border: 1px solid #eee;
   text-align: left;
 }
+
+body.dark-mode .recent-card {
+  background: #2a2a2a;
+  border-color: #444;
+}
+
+/* --- DELETE BUTTON UX --- */
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0; /* Invisible by default! */
+  transition: all 0.2s ease;
+  padding: 0;
+  margin-left: 10px;
+}
+
+/* Magic: Show trash can ONLY when hovering over the card */
+.recent-card:hover .delete-btn {
+  opacity: 1; 
+}
+
+/* Make it pop slightly when your mouse touches the trash can itself */
+.delete-btn:hover {
+  transform: scale(1.2); 
+}
+
+/* Mobile Fallback: Phones don't have "hover", so keep it slightly visible */
+@media (max-width: 768px) {
+  .delete-btn {
+    opacity: 0.4; 
+  }
+}
+
 body.dark-mode .recent-card {
   background: #2a2a2a;
   border-color: #444;

@@ -20,11 +20,11 @@
       <p id="totalCount" style="color: #666; font-size: 14px; margin-top: 0;">Total Words Mastered: Loading...</p>
       
       <div style="display: flex; gap: 10px; margin-top: 15px; margin-bottom: 10px;">
-        <button onclick="setView('recent')" style="flex: 1; padding: 6px; cursor: pointer; border-radius: 4px; border: 1px solid #555; background: transparent; color: inherit;">Recent 5</button>
-        <button onclick="setView('all')" style="flex: 1; padding: 6px; cursor: pointer; border-radius: 4px; border: 1px solid #555; background: transparent; color: inherit;">All Words</button>
+        <button id="tab-recent" class="tab-btn active-tab" onclick="setView('recent')">Recent 5</button>
+        <button id="tab-all" class="tab-btn" onclick="setView('all')">All Words</button>
       </div>
 
-      <div id="recentWords" style="max-height: 300px; overflow-y: auto; padding-right: 5px;">
+      <div id="recentWords" style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
         </div>
     </div>
   </div>
