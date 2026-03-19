@@ -42,6 +42,7 @@ async function saveWord() {
         </div>
       `;
       document.getElementById('wordInput').value = ''; 
+      loadDashboard();
     } else {
       throw new Error(result.message);
     }
@@ -58,6 +59,35 @@ async function saveWord() {
     saveBtn.disabled = false;
     statusDiv.innerHTML = "❌ Error saving. Check console.";
     console.error(error);
+  }
+}
+
+// --- FETCH DASHBOARD DATA (PHASE 3) ---
+async function loadDashboard() {
+  const recentDiv = document.getElementById('recentWords');
+  const countText = document.getElementById('totalCount');
+  
+  try {
+    const response = await fetch(GOOGLE_SCRIPT_URL);
+    const result = await response.json();
+    
+    if (result.status === "success") {
+      countText.innerText = `Total Words Mastered: ${result.totalWords}`;
+      recentDiv.innerHTML = `<h4 style="text-align: left; margin-bottom: 10px;">Recent Words:</h4>`;
+      
+      // Loop through the data and build a mini-card for each word
+      result.recent.forEach(item => {
+        recentDiv.innerHTML += `
+          <div class="recent-card">
+            <strong>${item.word}</strong> <span style="font-size: 12px; color: #888;">(${item.translation})</span>
+            <div style="font-size: 13px; margin-top: 4px;">${item.meaning}</div>
+          </div>
+        `;
+      });
+    }
+  } catch (error) {
+    console.error("Error loading dashboard:", error);
+    countText.innerText = "Could not load stats.";
   }
 }
 
@@ -82,4 +112,5 @@ window.onload = () => {
     document.body.classList.add('dark-mode');
     document.getElementById('themeToggle').innerText = '☀️';
   }
+  loadDashboard();
 };

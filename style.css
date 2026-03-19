@@ -84,3 +84,20 @@ body.dark-mode input::placeholder {
 body.dark-mode #status { 
   color: #bbb; 
 }
+
+/* --- DASHBOARD STYLES --- */
+.recent-card {
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  border: 1px solid #eee;
+  text-align: left;
+}
+body.dark-mode .recent-card {
+  background: #2a2a2a;
+  border-color: #444;
+}
+body.dark-mode #dashboard {
+  border-top-color: #444;
+}
