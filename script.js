@@ -49,3 +49,26 @@ async function saveWord() {
     console.error(error);
   }
 }
+
+// --- DARK MODE LOGIC ---
+function toggleTheme() {
+  // Toggle the dark-mode class on the body
+  document.body.classList.toggle('dark-mode');
+  
+  // Check if it's currently dark mode
+  const isDark = document.body.classList.contains('dark-mode');
+  
+  // Change the icon
+  document.getElementById('themeToggle').innerText = isDark ? '☀️' : '🌙';
+  
+  // Save preference to local storage
+  localStorage.setItem('vocabAppTheme', isDark ? 'dark' : 'light');
+}
+
+// Check memory when the app first loads
+window.onload = () => {
+  if (localStorage.getItem('vocabAppTheme') === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeToggle').innerText = '☀️';
+  }
+};
