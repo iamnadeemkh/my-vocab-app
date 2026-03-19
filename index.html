@@ -8,16 +8,23 @@
 </head>
 <body>
   <button id="themeToggle" onclick="toggleTheme()" style="position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer;">🌙</button>
+  
   <div class="container">
     <h2>📚 Save a Word</h2>
     <input type="text" id="wordInput" placeholder="Enter a new English word..." autocomplete="off">
     <button id="saveBtn" onclick="saveWord()">Auto-Fill & Save</button>
     <div id="status"></div>
+    
     <div id="dashboard" style="margin-top: 30px; border-top: 1px solid #ddd; padding-top: 20px;">
       <h3 style="margin-bottom: 5px;">📊 Your Progress</h3>
       <p id="totalCount" style="color: #666; font-size: 14px; margin-top: 0;">Total Words Mastered: Loading...</p>
       
-      <div id="recentWords" style="margin-top: 15px;">
+      <div style="display: flex; gap: 10px; margin-top: 15px; margin-bottom: 10px;">
+        <button onclick="setView('recent')" style="flex: 1; padding: 6px; cursor: pointer; border-radius: 4px; border: 1px solid #555; background: transparent; color: inherit;">Recent 5</button>
+        <button onclick="setView('all')" style="flex: 1; padding: 6px; cursor: pointer; border-radius: 4px; border: 1px solid #555; background: transparent; color: inherit;">All Words</button>
+      </div>
+
+      <div id="recentWords" style="max-height: 300px; overflow-y: auto; padding-right: 5px;">
         </div>
     </div>
   </div>

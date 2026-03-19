@@ -1,6 +1,10 @@
 // 🛑 PASTE YOUR URLs AND KEYS HERE 🛑
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzV41GghO9dimtiPkUEp6ZLM8dkmaQRKwRzCK5-5ZAS-Cjh2nynB_otguR2ElbX1y-Q/exec";
 
+// --- STATE VARIABLES ---
+let globalWords = [];
+let currentView = 'recent'; // Default to recent
+
 async function saveWord() {
   const word = document.getElementById('wordInput').value.trim();
   const statusDiv = document.getElementById('status');
@@ -62,9 +66,8 @@ async function saveWord() {
   }
 }
 
-// --- FETCH DASHBOARD DATA (PHASE 3) ---
+// --- FETCH DASHBOARD DATA ---
 async function loadDashboard() {
-  const recentDiv = document.getElementById('recentWords');
   const countText = document.getElementById('totalCount');
   
   try {
@@ -72,22 +75,73 @@ async function loadDashboard() {
     const result = await response.json();
     
     if (result.status === "success") {
+      globalWords = result.words; // Save all words to memory
       countText.innerText = `Total Words Mastered: ${result.totalWords}`;
-      recentDiv.innerHTML = `<h4 style="text-align: left; margin-bottom: 10px;">Recent Words:</h4>`;
-      
-      // Loop through the data and build a mini-card for each word
-      result.recent.forEach(item => {
-        recentDiv.innerHTML += `
-          <div class="recent-card">
-            <strong>${item.word}</strong> <span style="font-size: 12px; color: #888;">(${item.translation})</span>
-            <div style="font-size: 13px; margin-top: 4px;">${item.meaning}</div>
-          </div>
-        `;
-      });
+      renderList(); // Draw the list!
     }
   } catch (error) {
     console.error("Error loading dashboard:", error);
     countText.innerText = "Could not load stats.";
+  }
+}
+
+// --- RENDER LIST ---
+function renderList() {
+  const listDiv = document.getElementById('recentWords');
+  listDiv.innerHTML = ""; // Clear current items
+
+  // If view is 'recent', grab only the first 5. Otherwise, grab all.
+  const wordsToShow = currentView === 'recent' ? globalWords.slice(0, 5) : globalWords;
+
+  wordsToShow.forEach(item => {
+    // Only show delete button if we are looking at 'all' words
+    const deleteBtn = currentView === 'all' 
+      ? `<button onclick="deleteWord('${item.word}')" style="background: none; border: none; cursor: pointer; font-size: 20px;" title="Delete Word">🗑️</button>` 
+      : ``;
+
+    listDiv.innerHTML += `
+      <div class="recent-card" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="font-size: 16px;">${item.word}</strong> <span style="font-size: 12px; color: #888;">(${item.translation})</span>
+          <div style="font-size: 13px; margin-top: 4px;">${item.meaning}</div>
+        </div>
+        ${deleteBtn}
+      </div>
+    `;
+  });
+}
+
+// --- TAB TOGGLE FUNCTION ---
+function setView(viewType) {
+  currentView = viewType;
+  renderList(); // Redraw the UI instantly without fetching from Google!
+}
+
+// --- DELETE FUNCTION ---
+async function deleteWord(word) {
+  // Ask the user to confirm before deleting!
+  if (!confirm(`Are you sure you want to delete "${word}" from your database?`)) return;
+  
+  try {
+    // Send a special payload with action: "delete"
+    const payload = { action: "delete", word: word };
+    
+    const response = await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+    
+    if (result.status === "success") {
+      loadDashboard(); // Magically refresh the list so the deleted word disappears!
+    } else {
+      alert("Error: Could not delete word.");
+    }
+  } catch (error) {
+    console.error("Delete error:", error);
+    alert("Error deleting word. Check your connection.");
   }
 }
 
